@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ztree测试</title>
+    <script type="text/javascript" src="jquery-3.2.1.js"></script>
+    <script type="text/javascript" src="menu_data.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+                        
+            createMenu($("#menu"), json);
+
+            //*************可配置参数***********
+            //样式定义class
+            //展开菜单时，是否关闭同级其他菜单。
+            //*******************************
+            var openAndClose = true;
+
+
+            function createMenu(parentNode, menuData) {
+                var ul;
+                for (var i=0; i<menuData.length; i++) {
+                    if (i==0) {
+                        ul = $("<ul>").appendTo(parentNode);
+                    }
+                    
+                    if (menuData[i].children.length>0) {
+                        var li = $("<li>").appendTo(ul);
+                        var span = $("<span>" + menuData[i].menu + "</span>").appendTo(li);
+                        span.bind("click", function() {
+                            
+                            var clickIndex = $(this).parent().index();
+
+                            //如果当前菜单是展开的，则关闭
+                            if ($(this).attr("open")) {
+                                $(this).parent().children("ul").remove();
+                                $(this).attr("open", false);
+                            } else if (menuData[clickIndex].children) { //否则，开启
+                                createMenu($(this).parent(), menuData[clickIndex].children);
+                                $(this).attr("open", true);
+                                if (openAndClose) {
+                                    //关闭同级其他展开的菜单
+                                    $(this).parent().siblings().children("ul").remove();
+                                    $(this).parent().siblings().children("span").attr("open", false);
+                                }
+                            }
+                   
+                        });
+
+                   
+                    } else {
+                        $("<li>" + menuData[i].menu + "</li>")
+                            .bind("click", function() {
+                
+                                console.log(menuData[$(this).index()].menu);
+                            })
+                            .appendTo(ul);
+                    }
+
+                }
+            }
+
+
+        });
+    </script>
+</head>
+<body>
+	<div id="menu">
+    
+	</div>
+</body>
+
+</html>
