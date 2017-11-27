@@ -21,15 +21,16 @@ function LevelNaviMenu(container, jsonData, openAndClose) {
     this.createMenuTree = function(parentNode, menuData) {
         for (var i=0; i<menuData.length; i++) {
             if (i==0) {
-                //TODO 判断当前菜单层次
-                var lv = 0;
-                var ul = $("<ul class='menu-level-" + lv + "'>").appendTo(parentNode);
+                var ul = $("<ul>").appendTo(parentNode);
+                if (parentNode.get(0).tagName == "LI") {
+                   ul.hide();
+                }
             }
     
             if (menuData[i].children.length>0) {
                 var li = $("<li>").appendTo(ul);
                 $("<span class='menu-group'>" + menuData[i].menu + "</span>").appendTo(li);
-                this.createMenuTree(li, menuData[i].children, lv++);  
+                this.createMenuTree(li, menuData[i].children);  
             } else {
                 $("<li class='menu-item'>" + menuData[i].menu + "</li>").appendTo(ul);
             }
